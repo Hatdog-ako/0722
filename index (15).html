@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Paper Rings 💍</title>
+
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;1,600&family=Inter:wght@300;400&display=swap" rel="stylesheet">
+
+<style>
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+}
+
+/* ---------- BODY ---------- */
+body{
+  background: linear-gradient(180deg,#ffe6ef,#ffd1e3,#fff5d6);
+  height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  overflow:hidden;
+  font-family:'Inter', sans-serif;
+  color:#5a2a3c;
+}
+
+/* confetti texture */
+body::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:
+    radial-gradient(circle at 20% 30%, rgba(255,182,193,.25) 2px, transparent 3px),
+    radial-gradient(circle at 80% 60%, rgba(255,215,0,.25) 2px, transparent 3px);
+  background-size:40px 40px;
+  pointer-events:none;
+}
+
+/* ---------- FIREWORKS CANVAS ---------- */
+#fireworks{
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  pointer-events:none;
+  z-index:5;
+}
+
+/* ---------- CONTAINER ---------- */
+.container{
+  text-align:center;
+  position:relative;
+}
+
+/* ---------- PIN SCREEN ---------- */
+.pin-screen{
+  background:#fff;
+  padding:36px 30px;
+  border-radius:26px;
+  width:320px;
+  box-shadow:0 25px 50px rgba(0,0,0,0.2);
+}
+
+.pin-screen h2{
+  font-family:'Playfair Display', serif;
+  font-style:italic;
+  font-size:30px;
+  color:#d63384;
+  margin-bottom:6px;
+}
+
+.pin-screen p{
+  font-size:13px;
+  color:#8b4a63;
+  margin-bottom:14px;
+}
+
+/* PIN DISPLAY */
+.pin-display{
+  width:180px;
+  height:42px;
+  margin:16px auto 22px;
+  border-radius:14px;
+  background:#ffe9f2;
+  font-size:22px;
+  letter-spacing:10px;
+  line-height:42px;
+  color:#d63384;
+}
+
+/* ---------- PIN PAD ---------- */
+.pin{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:14px;
+  justify-items:center;
+}
+
+/* CIRCLE BUTTONS */
+.pin button{
+  width:62px;
+  height:62px;
+  border-radius:50%;
+  border:none;
+  background:linear-gradient(145deg,#ffb6c1,#ff8fab);
+  color:#5a2a3c;
+  font-size:20px;
+  cursor:pointer;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  box-shadow:0 8px 16px rgba(0,0,0,0.25);
+  transition:.25s;
+}
+
+.pin button:hover{
+  transform:scale(1.12) rotate(5deg);
+}
+
+/* ENTER BUTTON */
+.enter-btn{
+  margin-top:22px;
+  padding:14px 42px;
+  font-size:15px;
+  border-radius:22px;
+  border:none;
+  background:linear-gradient(135deg,#ffd966,#ffb703);
+  color:#5a2a3c;
+  cursor:pointer;
+  letter-spacing:1px;
+  box-shadow:0 10px 22px rgba(0,0,0,0.25);
+}
+
+/* ---------- ENVELOPE ---------- */
+.envelope{
+  display:none;
+  width:270px;
+  height:165px;
+  background:#fff;
+  margin:auto;
+  border-radius:14px;
+  position:relative;
+  cursor:pointer;
+  box-shadow:0 25px 45px rgba(0,0,0,0.3);
+  animation:bounce 2.2s infinite;
+}
+
+@keyframes bounce{
+  0%,100%{transform:translateY(0)}
+  50%{transform:translateY(-6px)}
+}
+
+.envelope::before{
+  content:"";
+  position:absolute;
+  top:0;
+  left:0;
+  width:0;
+  height:0;
+  border-left:135px solid transparent;
+  border-right:135px solid transparent;
+  border-top:85px solid #ffd1e3;
+}
+
+.envelope span{
+  position:absolute;
+  top:50%;
+  left:50%;
+  transform:translate(-50%,-50%);
+  font-size:30px;
+}
+
+/* ---------- LETTER ---------- */
+.letter{
+  display:none;
+  background:#fff;
+  padding:36px;
+  width:360px;
+  border-radius:26px;
+  box-shadow:0 30px 60px rgba(0,0,0,0.35);
+  animation:slideUp 1s ease forwards;
+}
+
+.letter h3{
+  font-family:'Playfair Display', serif;
+  font-style:italic;
+  font-size:28px;
+  color:#d63384;
+  margin-bottom:16px;
+}
+
+.letter p{
+  font-size:14px;
+  line-height:1.75;
+  color:#5a2a3c;
+}
+
+/* Typewriter cursor */
+#typewriter::after{
+  content:"|";
+  margin-left:4px;
+  animation:blink 1s infinite;
+}
+
+@keyframes blink{
+  0%,50%{opacity:1}
+  51%,100%{opacity:0}
+}
+
+@keyframes slideUp{
+  from{transform:translateY(90px);opacity:0;}
+  to{transform:translateY(0);opacity:1;}
+}
+</style>
+</head>
+
+<body>
+
+<canvas id="fireworks"></canvas>
+
+<div class="container">
+
+  <!-- PIN SCREEN -->
+  <div class="pin-screen" id="pinScreen">
+    <h2>Happy New Year💍</h2>
+    <p></p>
+
+    <div class="pin-display" id="pinDisplay"></div>
+
+    <div class="pin">
+      <button onclick="addPin(1)">1</button>
+      <button onclick="addPin(2)">2</button>
+      <button onclick="addPin(3)">3</button>
+      <button onclick="addPin(4)">4</button>
+      <button onclick="addPin(5)">5</button>
+      <button onclick="addPin(6)">6</button>
+      <button onclick="addPin(7)">7</button>
+      <button onclick="addPin(8)">8</button>
+      <button onclick="addPin(9)">9</button>
+      <button onclick="clearPin()">⌫</button>
+      <button onclick="addPin(0)">0</button>
+    </div>
+
+    <button class="enter-btn" onclick="checkPin()">say yes 💛</button>
+  </div>
+
+  <!-- ENVELOPE -->
+  <div class="envelope" id="envelope" onclick="openLetter()">
+    <span>💍</span>
+  </div>
+
+  <!-- LETTER -->
+  <div class="letter" id="letter">
+    <h3>I hate accidents except when we went from friends to this</h3>
+    <p id="typewriter"></p>
+  </div>
+
+</div>
+
+<!-- MUSIC -->
+<audio id="music" src="ring.mp3"></audio>
+
+<script>
+let pin = "";
+const correctPin = "0722";
+
+const message = `
+“I hate accidents except when we went from friends to this.”
+Happy New Year, Ma’am Emma! Super glad talaga na nakilala kita. Out of all the people sa Litmatch, ikaw yung napunta sa buhay ko. Parang pinaglalaruan lang tayo ng tadhana, kasi same school pa, same municipality pa (ulit-ulit noh HAHAHAHAHAHAHA).
+Alam ko naman na alam mo na gusto kita..... (Nakakabigla lang sa part na gusto mo din ako), nagsimula lang tayo as friends, tapos ayun—biglang nag-iba. Parang aksidente lang talaga lahat, walang planado, walang inaasahan… tapos biglang nagbago ang lahat(kinikilig ako tanginaaa). At honestly, sa lahat ng taong nakilala ko sa litmatch, ikaw ang pinaka thankful ako na nakilala ko.
+I want to court you. Hindi ko alam kung paano o kung paano sisimulan nang tama, pero gusto ko lang malaman mo na gustong‑gusto talaga kita. Sa mga simpleng chat, sa mga tawa, at kahit sa mga tahimik na moments lang—parang kapag sabay tayong umuuwi o magkatabi tayo sa jeep (HAHAHAHA). I could do anything you want. If you want me to stop my vices, gagawin ko, just for you, ma’am.
+Again, Happy New Year. Thank you for coming into my life. ✨
+`;
+
+let index = 0;
+
+function typeText(){
+  const el = document.getElementById("typewriter");
+  if(index < message.length){
+    el.innerHTML += message[index] === "\n" ? "<br>" : message[index];
+    index++;
+    setTimeout(typeText, 40);
+  }
+}
+
+function addPin(num){
+  if(pin.length < 4){
+    pin += num;
+    updateDisplay();
+  }
+}
+
+function clearPin(){
+  pin = "";
+  updateDisplay();
+}
+
+function updateDisplay(){
+  document.getElementById("pinDisplay").textContent =
+    pin === "" ? "" : "•".repeat(pin.length);
+}
+
+function checkPin(){
+  if(pin === correctPin){
+    pinScreen.style.display = "none";
+    envelope.style.display = "block";
+  }else{
+    alert("di ka magaling manghula💅 💕");
+    clearPin();
+  }
+}
+
+function openLetter(){
+  envelope.style.display = "none";
+  letter.style.display = "block";
+  music.play();
+
+  startFireworks();
+
+  index = 0;
+  typewriter.innerHTML = "";
+  typeText();
+}
+
+/* ---------- FIREWORKS ---------- */
+const canvas = document.getElementById("fireworks");
+const ctx = canvas.getContext("2d");
+
+function resizeCanvas(){
+  canvas.width = innerWidth;
+  canvas.height = innerHeight;
+}
+resizeCanvas();
+addEventListener("resize", resizeCanvas);
+
+function firework(){
+  const x = Math.random() * canvas.width;
+  const y = Math.random() * canvas.height * 0.5;
+  const particles = [];
+
+  for(let i=0;i<40;i++){
+    particles.push({
+      x, y,
+      dx: Math.cos(Math.random()*Math.PI*2) * (Math.random()*3+1),
+      dy: Math.sin(Math.random()*Math.PI*2) * (Math.random()*3+1),
+      life: 60,
+      color: ["#ffb6c1","#ffd966","#fff","#ff8fab"][Math.floor(Math.random()*4)]
+    });
+  }
+
+  function animate(){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    particles.forEach(p=>{
+      if(p.life>0){
+        ctx.fillStyle = p.color;
+        ctx.fillRect(p.x,p.y,3,3);
+        p.x += p.dx;
+        p.y += p.dy;
+        p.life--;
+      }
+    });
+    if(particles.some(p=>p.life>0)){
+      requestAnimationFrame(animate);
+    }
+  }
+  animate();
+}
+
+function startFireworks(){
+  setInterval(firework, 700);
+}
+</script>
+
+</body>
+</html>
